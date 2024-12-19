@@ -18,12 +18,10 @@ def set_seed(seed=42):
     torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-
 set_seed(42)
 
 
 def load_arff(filename):
-    """Load ARFF file into a pandas DataFrame."""
     data, meta = arff.loadarff(filename)
     df = pd.DataFrame(data)
     # Decode byte strings to UTF-8
@@ -33,17 +31,13 @@ def load_arff(filename):
 
 
 def preprocess_data(df, label_column):
-
     df = df.dropna()
-
     # Initialize LabelEncoder
     le = LabelEncoder()
-
     # Encode categorical features
     for col in df.select_dtypes(include=['object', 'string']):
         if col != label_column:  # Exclude label column
             df[col] = le.fit_transform(df[col].astype(str))
-
     # Split features and target
     X = df.drop(columns=[label_column]).values
     y = df[label_column].values
@@ -57,11 +51,6 @@ def preprocess_data(df, label_column):
 
 class SimplestCNN1D(nn.Module):
     def __init__(self, input_size, num_classes):
-        """
-        A simple 1D CNN model.
-        :param input_size: The number of input features.
-        :param num_classes: Number of output classes.
-        """
         super(SimplestCNN1D, self).__init__()
         self.conv1 = nn.Conv1d(in_channels=1, out_channels=4, kernel_size=3, padding=1)
         self.relu = nn.ReLU()
@@ -151,9 +140,6 @@ def process_and_train(df, label_column, dataset_name, epochs=None, lr=None):
 
 # Combine all datasets
 def combine_datasets(*dfs):
-    """
-    Combine multiple datasets into a single DataFrame.
-    """
     combined_df = pd.concat(dfs, ignore_index=True)
     return combined_df
 

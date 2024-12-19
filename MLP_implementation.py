@@ -24,7 +24,6 @@ set_seed(42)
 
 
 def load_arff(filename):
-    """Load ARFF file into a pandas DataFrame."""
     data, meta = arff.loadarff(filename)
     df = pd.DataFrame(data)
     # Decode byte strings to UTF-8
@@ -40,7 +39,6 @@ def preprocess_data(df, label_column):
     # Initialize LabelEncoder
     le = LabelEncoder()
 
-    # Encode categorical features
     for col in df.select_dtypes(include=['object', 'string']):
         if col != label_column:  # Exclude label column
             df[col] = le.fit_transform(df[col].astype(str))
@@ -56,28 +54,23 @@ def preprocess_data(df, label_column):
     return X, y
 
 
-class SimplestCNN1D(nn.Module):
+class MLP(nn.Module):
     def __init__(self, input_size, num_classes):
-        """
-        A simple MLP model (despite the misleading name SimplestCNN1D).
-        :param input_size: The number of input features.
-        :param num_classes: Number of output classes.
-        """
-        super(SimplestCNN1D, self).__init__()
+        super(MLP, self).__init__()
 
         # MLP architecture
-        self.fc1 = nn.Linear(input_size, 128)  # First fully connected layer
-        self.relu = nn.ReLU()  # Activation function
-        self.fc2 = nn.Linear(128, 64)  # Second fully connected layer
-        self.fc3 = nn.Linear(64, num_classes)  # Output layer
+        self.fc1 = nn.Linear(input_size, 128)
+        self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(128, 64)
+        self.fc3 = nn.Linear(64, num_classes)
 
     def forward(self, x):
-        x = x.view(x.size(0), -1)  # Ensure input is flattened: [batch, input_size]
-        x = self.fc1(x)  # First layer
-        x = self.relu(x)  # Activation
-        x = self.fc2(x)  # Second layer
-        x = self.relu(x)  # Activation
-        x = self.fc3(x)  # Output layer
+        x = x.view(x.size(0), -1)
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = self.fc2(x)
+        x = self.relu(x)
+        x = self.fc3(x)
         return x
 
 def train(model, X_train, y_train, criterion, optimizer, epochs=800):
@@ -144,7 +137,7 @@ def process_and_train(df, label_column, dataset_name, epochs=None, lr=None):
     y_train = [y_train[i].unsqueeze(0) for i in range(y_train.size(0))]
 
     # Define model, loss, and optimizer
-    model = SimplestCNN1D(input_size=X_train[0].shape[1], num_classes=len(torch.unique(y)))
+    model = MLP(input_size=X_train[0].shape[1], num_classes=len(torch.unique(y)))
     summary(model, input_size=(1, X_train[0].shape[1]))
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=lr if lr else 0.005)

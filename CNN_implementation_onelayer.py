@@ -55,28 +55,18 @@ def preprocess_data(df, label_column):
     return X, y
 
 
-class SimplestCNN1D(nn.Module):
+class CNN_onelayer_model(nn.Module):
     def __init__(self, input_size, num_classes):
-        """
-        一个简单的1D CNN模型，仅包含一层卷积层。
 
-        :param input_size: 输入特征的数量。
-        :param num_classes: 输出类别的数量。
-        """
-        super(SimplestCNN1D, self).__init__()
-        # 单一卷积层
+        super(CNN_onelayer_model, self).__init__()
         self.conv = nn.Conv1d(in_channels=1, out_channels=num_classes, kernel_size=3, padding=1)
         self.relu = nn.ReLU()
         self.flatten_size = input_size
 
     def forward(self, x):
-        # 将输入重塑为 (batch_size, channels, input_size)
         x = x.view(-1, 1, self.flatten_size)
-        # 应用卷积
         x = self.conv(x)
-        # 应用ReLU激活函数
         x = self.relu(x)
-        # 全局平均池化，沿时间维度求均值
         x = x.mean(dim=-1)
         return x
 
@@ -145,7 +135,7 @@ def process_and_train(df, label_column, dataset_name, epochs=None, lr=None):
     y_train = [y_train[i].unsqueeze(0) for i in range(y_train.size(0))]
 
     # Define model, loss, and optimizer
-    model = SimplestCNN1D(input_size=X_train[0].shape[1], num_classes=len(torch.unique(y)))
+    model = CNN_onelayer_model(input_size=X_train[0].shape[1], num_classes=len(torch.unique(y)))
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=lr if lr else 0.005)
 

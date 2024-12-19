@@ -44,7 +44,6 @@ def preprocess_data(df, label_column):
         if col != label_column:  # Exclude label column
             df[col] = le.fit_transform(df[col].astype(str))
 
-    # Split features and target
     X = df.drop(columns=[label_column]).values
     y = df[label_column].values
 
@@ -57,39 +56,26 @@ def preprocess_data(df, label_column):
 
 class SimplestCNN1D(nn.Module):
     def __init__(self, input_size, num_classes):
-        """
-        A three-layer fully connected neural network.
-        :param input_size: The number of input features.
-        :param num_classes: Number of output classes.
-        """
         super(SimplestCNN1D, self).__init__()
 
         # Three fully connected layers
-        self.fc1 = nn.Linear(input_size, 128)  # First fully connected layer
-        self.relu1 = nn.ReLU()  # Activation function for first layer
-
-        self.fc2 = nn.Linear(128, 64)  # Second fully connected layer
-        self.relu2 = nn.ReLU()  # Activation function for second layer
-
-        self.fc3 = nn.Linear(64, 32)  # Third fully connected layer
-        self.relu3 = nn.ReLU()  # Activation function for third layer
-
-        self.output = nn.Linear(32, num_classes)  # Output layer
+        self.fc1 = nn.Linear(input_size, 128)
+        self.relu1 = nn.ReLU()
+        self.fc2 = nn.Linear(128, 64)
+        self.relu2 = nn.ReLU()
+        self.fc3 = nn.Linear(64, 32)
+        self.relu3 = nn.ReLU()
+        self.output = nn.Linear(32, num_classes)
 
     def forward(self, x):
-        """
-        Forward pass for the three-layer MLP.
-        :param x: Input tensor of shape [batch_size, input_size]
-        :return: Output tensor of shape [batch_size, num_classes]
-        """
         x = x.view(x.size(0), -1)  # Flatten input
         x = self.fc1(x)  # First layer
         x = self.relu1(x)
-        x = self.fc2(x)  # Second layer
+        x = self.fc2(x)
         x = self.relu2(x)
-        x = self.fc3(x)  # Third layer
+        x = self.fc3(x)
         x = self.relu3(x)
-        x = self.output(x)  # Output layer
+        x = self.output(x)
         return x
 
 

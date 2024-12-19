@@ -23,7 +23,6 @@ set_seed(42)
 
 
 def load_arff(filename):
-    """Load ARFF file into a pandas DataFrame."""
     data, meta = arff.loadarff(filename)
     df = pd.DataFrame(data)
     # Decode byte strings to UTF-8
@@ -59,34 +58,25 @@ import torch
 import torch.nn as nn
 
 
-class SimplestCNN1D(nn.Module):
+class CNN_MLP_model(nn.Module):
     def __init__(self, input_size, num_classes):
-        """
-        A simple 1D CNN + MLP model.
-        :param input_size: The number of input features.
-        :param num_classes: Number of output classes.
-        """
-        super(SimplestCNN1D, self).__init__()
+        super(CNN_MLP_model, self).__init__()
         # Single-layer CNN
         self.conv1 = nn.Conv1d(in_channels=1, out_channels=8, kernel_size=3, padding=1)
         self.relu = nn.ReLU()
-
-        # Flatten layer size depends on input_size after Conv1D
-        self.flatten_size = input_size * 8  # Assuming output channels=8
-
-        # MLP layers
-        self.fc1 = nn.Linear(self.flatten_size, 128)  # First MLP layer
-        self.fc2 = nn.Linear(128, num_classes)  # Output layer
+        self.flatten_size = input_size * 8
+        self.fc1 = nn.Linear(self.flatten_size, 128)
+        self.fc2 = nn.Linear(128, num_classes)
 
     def forward(self, x):
-        x = x.view(-1, 1, self.flatten_size // 8)  # Reshape to [batch, channels, input_size]
-        x = self.conv1(x)  # Apply single-layer CNN
+        x = x.view(-1, 1, self.flatten_size // 8)
+        x = self.conv1(x)
         x = self.relu(x)
 
-        x = x.view(x.size(0), -1)  # Flatten
-        x = self.fc1(x)  # First MLP layer
+        x = x.view(x.size(0), -1)
+        x = self.fc1(x)
         x = self.relu(x)
-        x = self.fc2(x)  # Output layer
+        x = self.fc2(x)
         return x
 
 
@@ -154,7 +144,7 @@ def process_and_train(df, label_column, dataset_name, epochs=None, lr=None):
     y_train = [y_train[i].unsqueeze(0) for i in range(y_train.size(0))]
 
     # Define model, loss, and optimizer
-    model = SimplestCNN1D(input_size=X_train[0].shape[1], num_classes=len(torch.unique(y)))
+    model = CNN_MLP_model(input_size=X_train[0].shape[1], num_classes=len(torch.unique(y)))
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=lr if lr else 0.005)
 
@@ -164,9 +154,6 @@ def process_and_train(df, label_column, dataset_name, epochs=None, lr=None):
 
 # Combine all datasets
 def combine_datasets(*dfs):
-    """
-    Combine multiple datasets into a single DataFrame.
-    """
     combined_df = pd.concat(dfs, ignore_index=True)
     return combined_df
 

@@ -55,14 +55,9 @@ def preprocess_data(df, label_column):
     return X, y
 
 
-class SimplestCNN1D(nn.Module):
+class residualCNN(nn.Module):
     def __init__(self, input_size, num_classes):
-        """
-        A 1D CNN model with residual (skip) connections.
-        :param input_size: The number of input features.
-        :param num_classes: Number of output classes.
-        """
-        super(SimplestCNN1D, self).__init__()
+        super(residualCNN, self).__init__()
         self.flatten_size = input_size
 
         # First convolutional layer
@@ -79,21 +74,18 @@ class SimplestCNN1D(nn.Module):
         self.conv3 = nn.Conv1d(in_channels=8, out_channels=num_classes, kernel_size=1)
 
     def forward(self, x):
-        # Reshape input to [batch, channels, sequence_length]
         x = x.view(-1, 1, self.flatten_size)
 
-        # First convolution
         out = self.conv1(x)
         out = self.relu(out)
 
-        # Second convolution with residual connection
-        residual = self.residual(x)  # Adjust input to match channels
-        out = self.conv2(out) + residual  # Add skip connection
+        residual = self.residual(x)
+        out = self.conv2(out) + residual
         out = self.relu(out)
 
         # Final output layer
         out = self.conv3(out)
-        out = out.mean(dim=-1)  # Global average pooling
+        out = out.mean(dim=-1)
 
         return out
 
@@ -161,7 +153,7 @@ def process_and_train(df, label_column, dataset_name, epochs=None, lr=None):
     y_train = [y_train[i].unsqueeze(0) for i in range(y_train.size(0))]
 
     # Define model, loss, and optimizer
-    model = SimplestCNN1D(input_size=X_train[0].shape[1], num_classes=len(torch.unique(y)))
+    model = residualCNN(input_size=X_train[0].shape[1], num_classes=len(torch.unique(y)))
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=lr if lr else 0.005)
 
