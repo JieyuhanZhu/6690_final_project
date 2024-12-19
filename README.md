@@ -68,8 +68,8 @@ Visualizes the filters (weights) of the first convolutional layer in a pre-train
 ```
 ```
 Gradient_ascend.py 
-Generate, optimize, and visualize activation patterns of a specific filter in a convolutional layer of a pre-trained model using gradient ascent with customizable input.
 ```
+Generate, optimize, and visualize activation patterns of a specific filter in a convolutional layer of a pre-trained model using gradient ascent with customizable input.
 ```
 Linear_classification.py 
 Evaluate the representation quality of different layers in a pre-trained MobileNet model by extracting activations, reducing dimensionality with PCA, and training a logistic regression classifier to measure classification accuracy.
