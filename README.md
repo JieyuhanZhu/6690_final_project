@@ -53,7 +53,7 @@ The overvieww of workflow is
 ```
 Load Data -> Feature Extraction -> Clustering -> Pseudo-Supervised Classification -> Save/load Model
 ```
-
+## Description of key functions of each file
 # Organization of this directory
 To be populated by students, as shown in previous assignments.
 
@@ -61,4 +61,3 @@ TODO: Create a directory/file tree
 ```
 
 ```
-# 6690_final_project
