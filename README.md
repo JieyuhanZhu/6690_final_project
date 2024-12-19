@@ -55,33 +55,33 @@ Load Data -> Feature Extraction -> Clustering -> Pseudo-Supervised Classificatio
 ```
 ## Description of key functions of each file
 ```
-Activation.py 
+1. Activation.py 
+```
 Identify and visualize the top N images that activate a specific filter in a convolutional layer of a pre-trained deep learning model, using CIFAR-10 as input data.
 ```
+2. Firstlayer_activation.py 
 ```
-Firstlayer_activation.py 
 Visualize the responses of all filters in a specified convolutional layer of a pre-trained model using real CIFAR-10 images.
 ```
+3. Firstlayer_directweights.py 
 ```
-Firstlayer_directweights.py 
 Visualizes the filters (weights) of the first convolutional layer in a pre-trained model, displaying them as grayscale images.
 ```
-```
-Gradient_ascend.py 
+4. Gradient_ascend.py 
 ```
 Generate, optimize, and visualize activation patterns of a specific filter in a convolutional layer of a pre-trained model using gradient ascent with customizable input.
 ```
-Linear_classification.py 
+5. Linear_classification.py 
+```
 Evaluate the representation quality of different layers in a pre-trained MobileNet model by extracting activations, reducing dimensionality with PCA, and training a logistic regression classifier to measure classification accuracy.
 ```
+6. data_processing.py 
 ```
-data_processing.py 
 Perform data preprocessing and augmentation for the CIFAR-10 dataset and visualizes both raw and preprocessed images with their corresponding class labels.
 ```
+7. evaluate.py 
 ```
-evaluate.py 
 Evaluate a trained model's accuracy using true labels and visualizes its predictions compared to the ground truth.
-```
 # Organization of this directory
 To be populated by students, as shown in previous assignments.
 
